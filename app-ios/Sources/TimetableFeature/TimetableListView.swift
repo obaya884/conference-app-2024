@@ -40,7 +40,6 @@ public struct TimetableView: View {
             }
             Spacer()
         }
-        .toast($store.toast)
         .background(AssetColors.Surface.surface.swiftUIColor)
         .frame(maxWidth: .infinity)
         .toolbar{
@@ -103,8 +102,8 @@ struct TimetableListView: View {
             .onAppear {
                 store.send(.view(.onAppear))
             }.background(AssetColors.Surface.surface.swiftUIColor)
-            // bottom floating tabbar padding
-            Color.clear.padding(.bottom, 60)
+            
+            bottomTabBarPadding
         }
     }
 }
@@ -126,14 +125,14 @@ struct TimetableGridView: View {
                     
                     ForEach(rooms, id: \.self) { column in
                         let room = column.toRoom()
-                        Text(room.name.currentLangTitle).foregroundStyle(room.roomTheme.primaryColor)
+                        Text(room.name.currentLangTitle).foregroundStyle(room.roomTheme.primaryColor).textStyle(.titleMedium)
                             .frame(width: 192)
                     }
                 }
                 ForEach(store.timetableItems, id: \.self) { timeBlock in
                     GridRow {
                         VStack {
-                            Text(timeBlock.startsTimeString).foregroundStyle(AssetColors.Surface.onSurface.swiftUIColor)
+                            Text(timeBlock.startsTimeString).foregroundStyle(AssetColors.Surface.onSurface.swiftUIColor).textStyle(.labelMedium)
                             Spacer()
                             
                         }.frame(height: 153)
@@ -154,8 +153,10 @@ struct TimetableGridView: View {
                     }
                 }
             }
+            .padding(.trailing)
+            
+            bottomTabBarPadding
         }
-        
     }
 }
 
@@ -167,9 +168,9 @@ struct TimeGroupMiniList: View {
     var body: some View {
         HStack {
             VStack {
-                Text(contents.startsTimeString)
-                Text("|")
-                Text(contents.endsTimeString)
+                Text(contents.startsTimeString).textStyle(.titleMedium)
+                Text("|").font(.system(size: 8))
+                Text(contents.endsTimeString).textStyle(.titleMedium)
                 Spacer()
             }.padding(10).foregroundStyle(AssetColors.Surface.onSurface.swiftUIColor)
             VStack {
@@ -188,6 +189,11 @@ struct TimeGroupMiniList: View {
         }.background(Color.clear)
             
     }
+}
+
+fileprivate var bottomTabBarPadding: some View {
+    // bottom floating tabbar padding
+    Color.clear.padding(.bottom, 60)
 }
 
 extension RoomType {
